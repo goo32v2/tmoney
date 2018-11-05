@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'com.asteblin'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'io.undertow:undertow-core:2.0.15.Final'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'com.squareup.okhttp3:okhttp:3.11.0'
+}
