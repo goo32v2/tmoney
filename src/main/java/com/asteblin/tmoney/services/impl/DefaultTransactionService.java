@@ -44,12 +44,8 @@ public class DefaultTransactionService implements TransactionService
       {
         transaction.withStatus(TransactionStatus.NOT_ENOUGH_AMOUNT);
       }
+      saveTransaction(transaction);
     }
-    else
-    {
-      transaction.withStatus(TransactionStatus.ACCOUNT_NOT_FOUND);
-    }
-    saveTransaction(transaction);
     return transaction;
   }
 

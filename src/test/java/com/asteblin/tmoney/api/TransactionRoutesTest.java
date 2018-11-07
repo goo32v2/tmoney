@@ -8,8 +8,10 @@ import org.junit.Test;
 
 import com.asteblin.tmoney.BaseApiTest;
 import com.asteblin.tmoney.api.requests.TransferRequest;
+import com.asteblin.tmoney.data.DataWrapper;
 import com.asteblin.tmoney.data.TransactionData;
 import com.asteblin.tmoney.data.TransactionStatus;
+import com.google.gson.reflect.TypeToken;
 
 import static org.junit.Assert.*;
 
@@ -23,55 +25,72 @@ public class TransactionRoutesTest extends BaseApiTest
   public void transfer() throws IOException
   {
     TransferRequest request = new TransferRequest("00001", "00002", 1500.0);
-    TransactionData transactionData = makePostRequest("/transfer", request, TransactionData.class);
-    assertNotNull(transactionData);
-    assertEquals(TransactionStatus.SUCCESS, transactionData.getStatus());
+    DataWrapper<TransactionData> response = makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
+    assertNotNull(response);
+    assertTrue(response.isStatus());
+    assertNotNull(response.getData());
+    assertEquals(TransactionStatus.SUCCESS, response.getData().getStatus());
   }
 
   @Test
   public void transferNotEnoughAmount() throws IOException
   {
     TransferRequest request = new TransferRequest("00001", "00002", 99999.0);
-    TransactionData transactionData = makePostRequest("/transfer", request, TransactionData.class);
-    assertNotNull(transactionData);
-    assertEquals(TransactionStatus.NOT_ENOUGH_AMOUNT, transactionData.getStatus());
+    DataWrapper<TransactionData> response = makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
+    assertNotNull(response);
+    assertTrue(response.isStatus());
+    assertNotNull(response.getData());
+    assertEquals(TransactionStatus.NOT_ENOUGH_AMOUNT, response.getData().getStatus());
   }
 
   @Test
   public void transferAccountNotFound() throws IOException
   {
     TransferRequest request = new TransferRequest("00001", "", 10.0);
-    TransactionData transactionData = makePostRequest("/transfer", request, TransactionData.class);
-    assertNotNull(transactionData);
-    assertEquals(TransactionStatus.ACCOUNT_NOT_FOUND, transactionData.getStatus());
+    DataWrapper<TransactionData> response = makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
+    assertNotNull(response);
+    assertFalse(response.isStatus());
+    assertNull(response.getData());
+  }
+
+  @Test
+  public void transferAccountsNotGiven() throws IOException
+  {
+    TransferRequest request = new TransferRequest("", "", 10.0);
+    DataWrapper<TransactionData> response = makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
+    assertNotNull(response);
+    assertFalse(response.isStatus());
+    assertNull(response.getData());
   }
 
   @Test
   public void getTransactions() throws IOException
   {
     TransferRequest request = new TransferRequest("00001", "00002", 10.0);
-    makePostRequest("/transfer", request, TransactionData.class);
+    makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
     request = new TransferRequest("00001", "00002", 10.0);
-    makePostRequest("/transfer", request, TransactionData.class);
+    makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
 
-    ArrayList arrayList = makeGetRequest("/transactions?accountId=00001", ArrayList.class);
-
-    assertNotNull(arrayList);
-    assertEquals(2, arrayList.size());
+    DataWrapper<List<TransactionData>> response = makeGetRequest("/transactions?accountId=00001", new TypeToken<DataWrapper<ArrayList<TransactionData>>>() {});
+    assertNotNull(response);
+    assertTrue(response.isStatus());
+    assertNotNull(response.getData());
+    assertEquals(2, response.getData().size());
   }
 
   @Test
   public void getTransactionsForAccountWithZeroTransactions() throws IOException
   {
     TransferRequest request = new TransferRequest("00001", "00002", 10.0);
-    makePostRequest("/transfer", request, TransactionData.class);
+    makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
     request = new TransferRequest("00001", "00002", 10.0);
-    makePostRequest("/transfer", request, TransactionData.class);
+    makePostRequest("/transfer", request, new TypeToken<DataWrapper<TransactionData>>(){});
 
-    ArrayList arrayList = makeGetRequest("/transactions?accountId=00003", ArrayList.class);
-
-    assertNotNull(arrayList);
-    assertEquals(0, arrayList.size());
+    DataWrapper<List<TransactionData>> response = makeGetRequest("/transactions?accountId=00003", new TypeToken<DataWrapper<ArrayList<TransactionData>>>() {});
+    assertNotNull(response);
+    assertTrue(response.isStatus());
+    assertNotNull(response.getData());
+    assertEquals(0, response.getData().size());
   }
 
 }

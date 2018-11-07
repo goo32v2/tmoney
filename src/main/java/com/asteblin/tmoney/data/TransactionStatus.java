@@ -5,5 +5,5 @@ package com.asteblin.tmoney.data;
  */
 public enum TransactionStatus
 {
-  SUCCESS, NOT_ENOUGH_AMOUNT, ACCOUNT_NOT_FOUND
+  SUCCESS, NOT_ENOUGH_AMOUNT
 }

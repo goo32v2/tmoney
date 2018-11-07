@@ -5,10 +5,9 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.asteblin.tmoney.BaseApiTest;
+import com.asteblin.tmoney.data.DataWrapper;
 import com.asteblin.tmoney.data.AccountData;
-
-import okhttp3.Request;
-import okhttp3.Response;
+import com.google.gson.reflect.TypeToken;
 
 import static org.junit.Assert.*;
 
@@ -21,16 +20,20 @@ public class AccountRoutesTest extends BaseApiTest
   @Test
   public void getAccount() throws IOException
   {
-    AccountData accountData = makeGetRequest("/account?accountId=00001", AccountData.class);
-    assertNotNull(accountData);
-    assertEquals("00001", accountData.getId());
+    DataWrapper<AccountData> response = makeGetRequest("/account?accountId=00001", new TypeToken<DataWrapper<AccountData>>(){});
+    assertNotNull(response);
+    assertTrue(response.isStatus());
+    assertNotNull(response.getData());
+    assertEquals("00001", response.getData().getId());
   }
 
   @Test
   public void getAccountForNotExistedAccount() throws IOException
   {
-    AccountData accountData = makeGetRequest("/account?accountId=", AccountData.class);
-    assertNull(accountData);
+    DataWrapper<AccountData> response = makeGetRequest("/account?accountId=", new TypeToken<DataWrapper<AccountData>>(){});
+    assertNotNull(response);
+    assertFalse(response.isStatus());
+    assertNull(response.getData());
   }
 
 }

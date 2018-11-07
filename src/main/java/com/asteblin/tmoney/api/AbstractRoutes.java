@@ -2,6 +2,7 @@ package com.asteblin.tmoney.api;
 
 import java.util.Deque;
 
+import com.asteblin.tmoney.data.DataWrapper;
 import com.google.gson.Gson;
 
 import io.undertow.server.HttpServerExchange;
@@ -35,5 +36,22 @@ public abstract class AbstractRoutes
   public <T> T deserializePostData(final String data, Class<T> clazz)
   {
     return gson.fromJson(data, clazz);
+  }
+
+  public <T> DataWrapper<T> createResponse(Integer errorCode, String errorMsg)
+  {
+    DataWrapper<T> res = new DataWrapper<>();
+    res.setErrorCode(errorCode);
+    res.setErrorMsg(errorMsg);
+    res.setStatus(false);
+    return res;
+  }
+
+  public <T> DataWrapper<T> createResponse(T data)
+  {
+    DataWrapper<T> res = new DataWrapper<>();
+    res.setData(data);
+    res.setStatus(true);
+    return res;
   }
 }
