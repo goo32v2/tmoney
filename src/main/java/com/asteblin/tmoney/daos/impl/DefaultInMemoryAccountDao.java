@@ -1,8 +1,7 @@
 package com.asteblin.tmoney.daos.impl;
 
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 
 import com.asteblin.tmoney.daos.AccountDao;
 import com.asteblin.tmoney.data.AccountData;
@@ -13,27 +12,17 @@ import com.asteblin.tmoney.data.AccountData;
 public class DefaultInMemoryAccountDao implements AccountDao
 {
 
-  private final ConcurrentMap<String, AccountData> inMemoryData;
+  private final Map<String, AccountData> inMemoryData;
 
-  public DefaultInMemoryAccountDao()
+  public DefaultInMemoryAccountDao(final Map<String, AccountData> accounts)
   {
-    inMemoryData = new ConcurrentHashMap<>();
-    inMemoryData.put("00001", createAccount("00001", 0.0));
-    inMemoryData.put("00002", createAccount("00002", 21050.0));
-    inMemoryData.put("00003", createAccount("00003", 0.0));
+    inMemoryData = accounts;
   }
 
   @Override
-  public AccountData getAccountById(final String id)
+  public AccountData findAccountById(final String id)
   {
     return inMemoryData.get(id);
   }
 
-  private AccountData createAccount(String id, Double amount)
-  {
-    AccountData account = new AccountData();
-    account.setId(id);
-    account.setAmount(amount);
-    return account;
-  }
 }

@@ -10,7 +10,17 @@ import com.asteblin.tmoney.data.TransactionData;
 public interface TransactionDao
 {
 
+  /**
+   * Save given transaction
+   * @param transaction to save
+   */
   void saveTransaction(TransactionData transaction);
 
-  List<TransactionData> getTransactionsByAccount(String accountId);
+  /**
+   * Find all transactions for given account id
+   * @param accountId for search in 'to' and 'from'
+   *
+   * @return {@link List<TransactionData>} with all find transactions
+   */
+  List<TransactionData> findTransactionsByAccount(String accountId);
 }

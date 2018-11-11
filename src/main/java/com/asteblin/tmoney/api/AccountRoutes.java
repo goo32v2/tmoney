@@ -28,7 +28,7 @@ public class AccountRoutes extends AbstractRoutes
     String accountId = getParam(httpServerExchange, "accountId");
     if (isNotEmpty(accountId))
     {
-      AccountData accountById = accountDao.getAccountById(accountId);
+      AccountData accountById = accountDao.findAccountById(accountId);
       sendJson(httpServerExchange, createResponse(accountById));
     }
     else

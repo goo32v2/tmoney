@@ -27,7 +27,7 @@ public class DefaultInMemoryTransactionDao implements TransactionDao
   }
 
   @Override
-  public List<TransactionData> getTransactionsByAccount(final String accountId)
+  public List<TransactionData> findTransactionsByAccount(final String accountId)
   {
     return inMemoryData.stream()
                        .filter(transaction -> accountId.equals(transaction.getFrom()) || accountId.equals(transaction.getTo()))

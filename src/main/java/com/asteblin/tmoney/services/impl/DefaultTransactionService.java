@@ -30,8 +30,8 @@ public class DefaultTransactionService implements TransactionService
     TransactionData transaction = new TransactionData();
     transaction.from(from).to(to).withAmount(amount);
 
-    AccountData toAccount = accountDao.getAccountById(to);
-    AccountData fromAccount = accountDao.getAccountById(from);
+    AccountData toAccount = accountDao.findAccountById(to);
+    AccountData fromAccount = accountDao.findAccountById(from);
     if (toAccount != null && fromAccount != null)
     {
       if (fromAccount.getAmount() != null && fromAccount.getAmount() >= amount)
@@ -44,7 +44,7 @@ public class DefaultTransactionService implements TransactionService
       {
         transaction.withStatus(TransactionStatus.NOT_ENOUGH_AMOUNT);
       }
-      saveTransaction(transaction);
+      transactionDao.saveTransaction(transaction);
     }
     return transaction;
   }
@@ -52,11 +52,7 @@ public class DefaultTransactionService implements TransactionService
   @Override
   public List<TransactionData> getTransactionsByAccount(final String accountId)
   {
-    return transactionDao.getTransactionsByAccount(accountId);
+    return transactionDao.findTransactionsByAccount(accountId);
   }
 
-  private void saveTransaction(TransactionData data)
-  {
-    transactionDao.saveTransaction(data);
-  }
 }

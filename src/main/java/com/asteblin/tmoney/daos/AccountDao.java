@@ -8,5 +8,11 @@ import com.asteblin.tmoney.data.AccountData;
 public interface AccountDao
 {
 
-  AccountData getAccountById(String id);
+  /**
+   * Find account by id
+   * @param id for search
+   *
+   * @return {@link AccountData} if find, or else null
+   */
+  AccountData findAccountById(String id);
 }
